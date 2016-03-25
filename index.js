@@ -15,6 +15,30 @@
 
     class ExtendedPromise extends Promise {
 
+        constructor(executor) {
+            switch (typeof executor) {
+                case 'function':
+                    super(executor);
+                    return;
+                case 'object':
+                    if (executor instanceof Promise) {
+                        let alexec = (...decide) =>
+                            executor.then(...decide.map(_igretf));
+                        super(alexec);
+                        return;
+                    }
+            }
+            throw new TypeError(`${executor} is not a valid executor`);
+        }
+
+        static all(iterable) {
+            return new this(super.all(iterable));
+        }
+
+        static race(iterable) {
+            return new this(super.race(iterable));
+        }
+
         mkchange(...fn) {
             return this.then(...fn);
         }
