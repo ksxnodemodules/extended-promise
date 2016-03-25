@@ -32,11 +32,11 @@
         }
 
         static all(iterable) {
-            return new ExtendedPromise(super.all(iterable));
+            return new this(super.all(iterable));
         }
 
         static race(iterable) {
-            return new ExtendedPromise(super.race(iterable));
+            return new this(super.race(iterable));
         }
 
         mkchange(...fn) {
