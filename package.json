@@ -1,0 +1,26 @@
+
+{
+	"name": "extended-promise",
+	"description": "Extend ECMAScript 6 promise",
+	"version": "0.0.0",
+	"author": "Hoàng Văn Khải <hvksmr1996@gmail.com>",
+	"contributors": [
+		"Hoàng Văn Khải <hvksmr1996@gmail.com>"
+	],
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ksxnodemodules/extended-promise.git"
+	},
+	"engines": {
+		"node": ">= 5.0.0"
+	},
+	"dependencies": {},
+	"devDependencies": {},
+	"main": "index.js",
+	"bugs": {
+		"url": "https://github.com/ksxnodemodules/extended-promise/issues"
+	},
+	"homepage": "https://github.com/ksxnodemodules/extended-promise#readme",
+	"scripts": {}
+}
