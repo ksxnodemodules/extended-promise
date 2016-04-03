@@ -39,6 +39,18 @@
             return new this(super.race(iterable));
         }
 
+        static queue(promise, ...fnlist) {
+            return fnlist.reduce((lasted, fn) => lasted.createListenerPromise(fn), new this(promise));
+        }
+
+        static resolve(value) {
+            return new this((resolve) => resolve(value));
+        }
+
+        static reject(value) {
+            return new this((_, reject) => reject(value));
+        }
+
         mkchange(...fn) {
             return this.then(...fn);
         }
@@ -53,6 +65,14 @@
 
         onfinish(onfulfill, onreject) {
             return this.then(_igretf(_getfunc(onfulfill, DONOTHING)), _igretf(_getfunc(onreject, THROW)));
+        }
+
+        createListenerPromise(fn) {
+            return new this.constructor((resolve, reject) => this.onfinish((value) => fn(value, resolve, reject), reject));
+        }
+
+        listener(fn) {
+            return this.createListenerPromise(fn);
         }
 
     }
