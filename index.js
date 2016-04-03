@@ -43,6 +43,14 @@
             return fnlist.reduce((lasted, fn) => lasted.createListenerPromise(fn), new this(promise));
         }
 
+        static resolve(value) {
+            return new this((resolve) => resolve(value));
+        }
+
+        static reject(value) {
+            return new this((_, reject) => reject(value));
+        }
+
         mkchange(...fn) {
             return this.then(...fn);
         }
