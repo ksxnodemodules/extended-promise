@@ -51,6 +51,10 @@
             return new this((_, reject) => reject(value));
         }
 
+        static reverse(promise) {
+            return new this((resolve, reject) => promise.then(_igretf(reject), _igretf(resolve)));
+        }
+
         mkchange(...fn) {
             return this.then(...fn);
         }
@@ -73,6 +77,10 @@
 
         listener(fn) {
             return this.createListenerPromise(fn);
+        }
+
+        reverse() {
+            return this.constructor.reverse(this);
         }
 
     }
