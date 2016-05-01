@@ -2,9 +2,6 @@
 ((module) => {
 	'use strict';
 
-	var _getfunc = (fn, ...fnlist) =>
-		typeof fn === 'function' ? fn : _getfunc(...fnlist);
-
 	var _igretf = (fn) => (value) => {
 		fn(value);
 		return value;
@@ -67,8 +64,8 @@
 			return this.catch(_igretf(fn));
 		}
 
-		onfinish(onfulfill, onreject) {
-			return this.then(_igretf(_getfunc(onfulfill, DONOTHING)), _igretf(_getfunc(onreject, THROW)));
+		onfinish(onfulfill = DONOTHING, onreject = THROW) {
+			return this.then(_igretf(onfulfill), _igretf(onreject));
 		}
 
 		createListenerPromise(fn) {

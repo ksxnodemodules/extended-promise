@@ -7,7 +7,7 @@
 
 ## Requirements
 
- * Node >= 5.0.0, with `--es-staging` flag
+ * Node >= 6.0.0
 
 ## Usage
 
