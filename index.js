@@ -2,13 +2,13 @@
 ((module) => {
 	'use strict';
 
-	var _igretf = (fn) => (value) => {
+	var _igretf = fn => value => {
 		fn(value);
 		return value;
 	};
 
 	const DONOTHING = () => {};
-	const THROW = (error) => {throw error};
+	const THROW = error => {throw error};
 
 	class ExtendedPromise extends Promise {
 
@@ -29,27 +29,27 @@
 		}
 
 		static all(iterable) {
-			return new ExtendedPromise(super.all(iterable));
+			return new this(super.all(iterable));
 		}
 
 		static race(iterable) {
-			return new ExtendedPromise(super.race(iterable));
+			return new this(super.race(iterable));
 		}
 
 		static queue(promise, ...fnlist) {
-			return fnlist.reduce((lasted, fn) => lasted.createListenerPromise(fn), new ExtendedPromise(promise));
+			return fnlist.reduce((lasted, fn) => lasted.createListenerPromise(fn), new this(promise));
 		}
 
 		static resolve(value) {
-			return new ExtendedPromise((resolve) => resolve(value));
+			return new this((resolve) => resolve(value));
 		}
 
 		static reject(value) {
-			return new ExtendedPromise((_, reject) => reject(value));
+			return new this((_, reject) => reject(value));
 		}
 
 		static reverse(promise) {
-			return new ExtendedPromise((resolve, reject) => promise.then(_igretf(reject), _igretf(resolve)));
+			return new this((resolve, reject) => promise.then(_igretf(reject), _igretf(resolve)));
 		}
 
 		mkchange(...fn) {
@@ -69,7 +69,7 @@
 		}
 
 		createListenerPromise(fn) {
-			return new ExtendedPromise.constructor((resolve, reject) => this.onfinish((value) => fn(value, resolve, reject), reject));
+			return new this.constructor((resolve, reject) => this.onfinish(value => fn(value, resolve, reject), reject));
 		}
 
 		listener(fn) {
