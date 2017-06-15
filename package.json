@@ -12,7 +12,7 @@
 		"url": "https://github.com/ksxnodemodules/extended-promise.git"
 	},
 	"engines": {
-		"node": ">= 6.0.0"
+		"node": ">= 8.0.0"
 	},
 	"dependencies": {},
 	"main": "index.js",
