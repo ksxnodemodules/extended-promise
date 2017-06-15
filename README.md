@@ -1,4 +1,3 @@
-
 # ExtendedPromise
 
 ## Description
@@ -7,7 +6,7 @@
 
 ## Requirements
 
- * Node ≥ 8.0.0
+* Node ≥ 8.0.0
 
 ## Usage
 
