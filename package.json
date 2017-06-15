@@ -23,6 +23,15 @@
   "devDependencies": {
     "standard": "10.0.2"
   },
+  "standard": {
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "env": {
+      "node": true,
+      "es6": true
+    }
+  },
   "scripts": {
     "remake-package-json": "node sh/remake-package-json",
     "clean": "bash 'sh/clean.sh'",
