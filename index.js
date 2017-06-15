@@ -24,6 +24,10 @@ class ExtendedPromise extends Promise {
     throw new TypeError(`${executor} is not a valid executor`)
   }
 
+  static get create () {
+    return (...args) => new this(...args)
+  }
+
   static all (iterable) {
     return new this(super.all(iterable))
   }
