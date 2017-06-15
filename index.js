@@ -28,6 +28,10 @@ class ExtendedPromise extends Promise {
     return (...args) => new this(...args)
   }
 
+  static get EventPromise () {
+    return this.createEventPromiseClass()
+  }
+
   static all (iterable) {
     return new this(super.all(iterable))
   }
@@ -50,6 +54,14 @@ class ExtendedPromise extends Promise {
 
   static reverse (promise) {
     return new this((resolve, reject) => promise.then(_igretf(reject), _igretf(resolve)))
+  }
+
+  static createEventPromiseClass (
+    resolveEvent = this.resolveEvent,
+    rejectEvent = this.rejectEvent
+  ) {
+    const create = require('./lib/event-promise.js')
+    return create(this, resolveEvent, rejectEvent)
   }
 
   mkchange (...fn) {
