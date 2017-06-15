@@ -1,87 +1,82 @@
+'use strict'
 
-((module) => {
-	'use strict';
+const _igretf = fn => value => {
+  fn(value)
+  return value
+}
 
-	var _igretf = fn => value => {
-		fn(value);
-		return value;
-	};
+const DONOTHING = () => {}
+const THROW = error => { throw error }
 
-	const DONOTHING = () => {};
-	const THROW = error => {throw error};
+class ExtendedPromise extends Promise {
+  constructor (executor) {
+    switch (typeof executor) {
+      case 'function':
+        super(executor)
+        return
+      case 'object': if (executor instanceof Promise) {
+        super((...decide) =>
+          executor.then(...decide.map(_igretf))
+        )
+        return
+      }
+    }
+    throw new TypeError(`${executor} is not a valid executor`)
+  }
 
-	class ExtendedPromise extends Promise {
+  static all (iterable) {
+    return new this(super.all(iterable))
+  }
 
-		constructor(executor) {
-			switch (typeof executor) {
-				case 'function':
-					super(executor);
-					return;
-				case 'object':
-					if (executor instanceof Promise) {
-						let alexec = (...decide) =>
-							executor.then(...decide.map(_igretf));
-						super(alexec);
-						return;
-					}
-			}
-			throw new TypeError(`${executor} is not a valid executor`);
-		}
+  static race (iterable) {
+    return new this(super.race(iterable))
+  }
 
-		static all(iterable) {
-			return new this(super.all(iterable));
-		}
+  static queue (promise, ...fnlist) {
+    return fnlist.reduce((lasted, fn) => lasted.createListenerPromise(fn), new this(promise))
+  }
 
-		static race(iterable) {
-			return new this(super.race(iterable));
-		}
+  static resolve (value) {
+    return new this((resolve) => resolve(value))
+  }
 
-		static queue(promise, ...fnlist) {
-			return fnlist.reduce((lasted, fn) => lasted.createListenerPromise(fn), new this(promise));
-		}
+  static reject (value) {
+    return new this((_, reject) => reject(value))
+  }
 
-		static resolve(value) {
-			return new this((resolve) => resolve(value));
-		}
+  static reverse (promise) {
+    return new this((resolve, reject) => promise.then(_igretf(reject), _igretf(resolve)))
+  }
 
-		static reject(value) {
-			return new this((_, reject) => reject(value));
-		}
+  mkchange (...fn) {
+    return this.then(...fn)
+  }
 
-		static reverse(promise) {
-			return new this((resolve, reject) => promise.then(_igretf(reject), _igretf(resolve)));
-		}
+  onfulfill (fn) {
+    return this.then(_igretf(fn))
+  }
 
-		mkchange(...fn) {
-			return this.then(...fn);
-		}
+  onreject (fn) {
+    return this.catch(_igretf(fn))
+  }
 
-		onfulfill(fn) {
-			return this.then(_igretf(fn));
-		}
+  onfinish (onfulfill = DONOTHING, onreject = THROW) {
+    return this.then(_igretf(onfulfill), _igretf(onreject))
+  }
 
-		onreject(fn) {
-			return this.catch(_igretf(fn));
-		}
+  createListenerPromise (fn) {
+    return new this.constructor((resolve, reject) =>
+      this.onfinish(value => fn(value, resolve, reject), reject)
+    )
+  }
 
-		onfinish(onfulfill = DONOTHING, onreject = THROW) {
-			return this.then(_igretf(onfulfill), _igretf(onreject));
-		}
+  listener (fn) {
+    return this.createListenerPromise(fn)
+  }
 
-		createListenerPromise(fn) {
-			return new this.constructor((resolve, reject) => this.onfinish(value => fn(value, resolve, reject), reject));
-		}
+  reverse () {
+    return this.constructor.reverse(this)
+  }
+}
 
-		listener(fn) {
-			return this.createListenerPromise(fn);
-		}
-
-		reverse() {
-			return this.constructor.reverse(this);
-		}
-
-	}
-
-	module.exports = ExtendedPromise;
-
-})(module);
+module.exports = ExtendedPromise
