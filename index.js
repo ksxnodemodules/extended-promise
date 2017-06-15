@@ -5,6 +5,7 @@ const _igretf = fn => value => {
   return value
 }
 
+const BEITSELF = x => x
 const DONOTHING = () => {}
 const THROW = error => { throw error }
 
@@ -32,6 +33,22 @@ class ExtendedPromise extends Promise {
     return this.createEventPromiseClass()
   }
 
+  static async _serial (prset = [], callback = BEITSELF) {
+    const result = []
+    for (const promise of prset) {
+      const index = result.length
+      const response = await promise
+      const object = {
+        response,
+        promise,
+        index,
+        __proto__: [response, promise, index]
+      }
+      result.push(callback(object))
+    }
+    return result
+  }
+
   static all (iterable) {
     return new this(super.all(iterable))
   }
@@ -42,6 +59,10 @@ class ExtendedPromise extends Promise {
 
   static queue (promise, ...fnlist) {
     return fnlist.reduce((lasted, fn) => lasted.createListenerPromise(fn), new this(promise))
+  }
+
+  static serial (...args) {
+    return new this(this._serial(...args))
   }
 
   static resolve (value) {
